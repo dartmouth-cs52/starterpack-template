@@ -3,8 +3,6 @@ TODO: short project description, some screenshots
 
 ## Setup
 
-THIS IS A TEST
-
 TODO: how to get the project dev environment up and running, npm install etc
 
 ## Deployment
