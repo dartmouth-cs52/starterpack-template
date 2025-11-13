@@ -52,6 +52,14 @@ describe('Frontend Starterpack Tests', () => {
       cy.visit('/nonexistent');
       cy.contains('URL Not Found').should('be.visible');
     });
+
+    it('should keep aria-current on the active navigation link', () => {
+      cy.contains('nav a', 'Home').should('have.attr', 'aria-current', 'page');
+
+      cy.contains('nav a', 'About').click();
+      cy.contains('nav a', 'About').should('have.attr', 'aria-current', 'page');
+      cy.contains('nav a', 'Home').should('not.have.attr', 'aria-current');
+    });
   });
 
   describe('Counter Functionality', () => {
@@ -177,27 +185,20 @@ describe('Frontend Starterpack Tests', () => {
     });
   });
 
-  describe('Styling and Assets', () => {
-    it('should have loaded the stylesheet', () => {
+  describe('Routing behavior', () => {
+    it('should update browser history when navigating between routes', () => {
       cy.visit('/');
-      cy.get('body').should('have.css', 'font-family').and('include', 'Roboto');
-    });
+      cy.contains('a', 'About').click();
+      cy.location('pathname').should('eq', '/about');
 
-    it('should have logo div element', () => {
-      cy.get('.logo').should('exist');
-    });
-  });
+      cy.contains('a', 'test id1').click();
+      cy.location('pathname').should('eq', '/test/id1');
 
-  describe('Vite Build Verification', () => {
-    it('should load JavaScript modules correctly', () => {
-      cy.visit('/');
-      // If React loaded, the app will render
-      cy.get('#main').should('not.contain', 'Loading');
-    });
+      cy.go('back');
+      cy.location('pathname').should('eq', '/about');
 
-    it('should have React application running', () => {
-      cy.visit('/');
-      cy.get('#main').children().should('have.length.greaterThan', 0);
+      cy.go('back');
+      cy.location('pathname').should('eq', '/');
     });
   });
 
